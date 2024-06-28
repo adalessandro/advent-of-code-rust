@@ -19,7 +19,7 @@ fn create_file(path: &str) -> Result<File, std::io::Error> {
 
 pub fn handle(day: Day) {
     let input_path = format!("data/inputs/{day}.txt");
-    let example_path = format!("data/examples/{day}.txt");
+    let example_path = |part| format!("data/examples/{day}-{part}.txt");
     let module_path = format!("src/bin/{day}.rs");
 
     let mut file = match safe_create_file(&module_path) {
@@ -54,13 +54,16 @@ pub fn handle(day: Day) {
         }
     }
 
-    match create_file(&example_path) {
-        Ok(_) => {
-            println!("Created empty example file \"{}\"", &example_path);
-        }
-        Err(e) => {
-            eprintln!("Failed to create example file: {e}");
-            process::exit(1);
+    for part in 1..3 {
+        let file_path = example_path(part);
+        match create_file(&file_path) {
+            Ok(_) => {
+                println!("Created empty example file \"{}\"", &file_path);
+            }
+            Err(e) => {
+                eprintln!("Failed to create example file: {e}");
+                process::exit(1);
+            }
         }
     }
 
